@@ -24,36 +24,6 @@ Clear-Cut is a payment splitting application that allows users to manage expense
    go run cmd/main.go
    ```
 
-   The Here’s a README file for your application with curl requests included for testing:
-
----
-
-# Clear-Cut: A Payment Splitting Application
-
-## Overview
-
-Clear-Cut is a payment splitting application that allows users to manage expenses and group them accordingly. Users can register, log in, manage groups, and record expenses.
-
-## Project Structure
-
-- **cmd/main.go**: Entry point of the application.
-- **internal/auth**: Contains JWT-related functions.
-- **internal/handlers**: Handles HTTP requests.
-- **internal/models**: Defines data models.
-- **internal/storage**: Manages database interactions and schema.
-- **internal/services**: Contains in-memory data services (for testing).
-
-## Running the Application
-
-1. **Initialize the Database**:
-   Before running the application, ensure that the database is initialized. You can do this by running the application, which will automatically set up the database and tables.
-
-2. **Run the Application**:
-
-   ```bash
-   go run cmd/main.go
-   ```
-
    The application will start and listen on port `8080` by default.
 
 ## API Endpoints
