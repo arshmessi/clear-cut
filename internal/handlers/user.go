@@ -5,6 +5,7 @@ import (
 	"clear-cut/internal/models"
 	"clear-cut/internal/storage"
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
@@ -78,24 +79,34 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		Name:     "token",
 		Value:    token,
 		Expires:  time.Now().Add(24 * time.Hour),
-		HttpOnly: true, // Set HttpOnly to prevent JavaScript access
-		SameSite: http.SameSiteStrictMode, // Add SameSite attribute for CSRF protection
+		HttpOnly: true,
+		SameSite: http.SameSiteStrictMode,
+		Secure:   false, // Set to true if using HTTPS
+		Path:     "/",   // Set path to the root
 	})
+	
 
+	// Return the token as JSON
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"token": token})
 }
 
 // ProfileHandler returns the user's profile
 func ProfileHandler(w http.ResponseWriter, r *http.Request) {
-	token, err := r.Cookie("token")
+	cookie, err := r.Cookie("token")
 	if err != nil {
+		log.Println("Cookie error:", err)
 		http.Error(w, "Missing or invalid token", http.StatusUnauthorized)
 		return
 	}
 
+	log.Println("Received cookie:", cookie.Value)
+
 	// Validate JWT token
-	claims, err := auth.ValidateJWT(token.Value)
+	claims, err := auth.ValidateJWT(cookie.Value)
 	if err != nil {
+		log.Println("JWT validation error:", err)
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
 		return
 	}
